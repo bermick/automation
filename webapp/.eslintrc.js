@@ -10,7 +10,7 @@ module.exports = {
     browser: true,
     jquery: true
   },
-  extends: 'airbnb-base',
+  //extends: 'airbnb-base',
   // required to lint *.vue files
   plugins: [
     'html'

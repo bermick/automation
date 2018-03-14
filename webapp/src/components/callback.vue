@@ -2,15 +2,15 @@
 </template>
 <script>
 
-import { setIdToken, setAccessToken } from '../../utils/auth';
+import { setIdToken, setAccessToken, getInfo } from '../../utils/auth';
 
 export default {
-  name: '',
+  name: 'callback',
   mounted() {
     this.$nextTick(() => {
       setAccessToken();
       setIdToken();
-      window.location.href = '/';
+      window.location.href = '/devices';
     });
   },
 };

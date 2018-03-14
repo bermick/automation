@@ -25,30 +25,6 @@ const authCheck = jwt({
     algorithms: ['RS256']
 });
 
-
-app.get('/api/battles/public', (req, res) => {
-  let publicBattles = [];
-
-  res.json(publicBattles);
-})
-
-app.get('/api/battles/private', authCheck, (req,res) => {
-  let privateLights = [
-    {
-      id: 2111,
-      name: 'Foco cocina',
-      estado: '1'
-    },
-    {
-      id: 2112,
-      name: 'Luz Sala',
-      estado: '0'
-    }
-  ];
-
-  res.json(privateLights);
-})
-
 app.get('/api/lights', authCheck, (req,res) => {
   let privateLights = [
     {

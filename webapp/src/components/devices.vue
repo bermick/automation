@@ -70,7 +70,7 @@ export default {
     validateDeviceID() {
       this.isAdding = true;
       this.status = 'Adding Device';
-      getInfo();
+      console.log(this.$root.user);
       const deviceToInsert = {
         key: this.deviceID,
         mac_address: '01-11-22-33-',
@@ -93,6 +93,10 @@ export default {
     },
   },
   mounted() {
+    getInfo().then((user) => {
+      this.$root.user = user;
+      console.log(this.$root.user);
+    });
     this.getPrivateDevices();
   },
 };

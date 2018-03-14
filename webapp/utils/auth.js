@@ -57,12 +57,14 @@ export function getAccessToken() {
 
 export function getInfo() {
   // Parse the URL and extract the access_token
-  auth.parseHash(window.location.hash, function(err, authResult) {
-    if (err) {
-      return console.log(err);
-    }
-    auth.client.userInfo(getAccessToken(), function(err, user) {
-      console.log(user);
+  return new Promise((resolve, reject) => {
+    auth.parseHash(window.location.hash, function(err, authResult) {
+      if (err) {
+        reject(err);
+      }
+      auth.client.userInfo(getAccessToken(), function(error, userData) {
+        resolve(userData);
+      });
     });
   });
 }

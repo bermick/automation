@@ -7,11 +7,18 @@ async function getStagedDevice(device) {
 			throw 'Device has already been added';
 		}
 		let results = await db.executeGenericQuery('SELECT * FROM Staging_Devices where Staging_Devices.key = "' + device.key + '"');
+
 		if (results.length === 1) {
-			let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code) VALUES(null,"' + device.mac_address +'", "0", "' + device.user_id  + '", "' + device.key + '" )';
-			let insertResult = await db.executeGenericQuery(insertQuery);
-			if (insertResult.affectedRows) {
-				return 'Device ' + device.key + ' added successfully';
+			let registeredDevices = await db.executeGenericQuery('SELET mac_address FROM mac_keys WHERE mac_keys.key = "' + device.key + '"');
+			if(registeredDevices.length === 1) {
+				console.log(registeredDevices.mac_address);
+				let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code) VALUES(null,"' + registeredDevices.mac_address +'", "0", "' + device.user_id  + '", "' + device.key + '" )';
+				let insertResult = await db.executeGenericQuery(insertQuery);
+				if (insertResult.affectedRows) {
+					return 'Device ' + device.key + ' added successfully';
+				}
+			} else {
+				throw 'Please verify your device key and try again';
 			}
 		} else {
 			throw 'No staging device for ' + device.key;
