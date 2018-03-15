@@ -10,7 +10,7 @@ const CLIENT_DOMAIN = 'intellinode.eu.auth0.com';
 const REDIRECT = 'http://localhost:8080/callback';
 const SCOPE = 'openid profile email full_access';
 const AUDIENCE = 'http://vuelogintest.com';
-
+const USER = 'userInfo';
 
 var auth = new auth0.WebAuth({
   clientID: CLIENT_ID,
@@ -33,6 +33,7 @@ var router = new Router({
 export function logout() {
   clearIdToken();
   clearAccessToken();
+  clearUserInfo();
   router.go('/');
 }
 
@@ -55,7 +56,11 @@ export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
-export function getInfo() {
+export function getUserInfo() {
+  return JSON.parse(localStorage.getItem(USER));
+}
+
+export function setUserInfo() {
   // Parse the URL and extract the access_token
   return new Promise((resolve, reject) => {
     auth.parseHash(window.location.hash, function(err, authResult) {
@@ -63,12 +68,12 @@ export function getInfo() {
         reject(err);
       }
       auth.client.userInfo(getAccessToken(), function(error, userData) {
+        localStorage.setItem(USER, JSON.stringify(userData));
         resolve(userData);
       });
     });
   });
 }
-
 
 function clearIdToken() {
   localStorage.removeItem(ID_TOKEN_KEY);
@@ -76,6 +81,10 @@ function clearIdToken() {
 
 function clearAccessToken() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
+}
+
+function clearUserInfo() {
+  localStorage.removeItem(USER);
 }
 
 // Helper function that will allow us to extract the access_token and id_token

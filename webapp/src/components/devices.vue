@@ -43,7 +43,7 @@
 <script>
 import { RotateSquare2 } from 'vue-loading-spinner';
 import AppNav from './AppNav';
-import { isLoggedIn, getInfo } from '../../utils/auth';
+import { isLoggedIn, getUserInfo } from '../../utils/auth';
 import { getPrivateDevices, validateDeviceID } from '../../utils/devices-api';
 
 export default {
@@ -70,11 +70,9 @@ export default {
     validateDeviceID() {
       this.isAdding = true;
       this.status = 'Adding Device';
-      console.log(this.$root.user);
       const deviceToInsert = {
         key: this.deviceID,
-        mac_address: '01-11-22-33-',
-        user_id: '2',
+        email: getUserInfo().email,
       };
       validateDeviceID(deviceToInsert).then((response) => {
         this.status = response;
@@ -93,10 +91,6 @@ export default {
     },
   },
   mounted() {
-    getInfo().then((user) => {
-      this.$root.user = user;
-      console.log(this.$root.user);
-    });
     this.getPrivateDevices();
   },
 };

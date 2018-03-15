@@ -2,7 +2,9 @@
 </template>
 <script>
 
-import { setIdToken, setAccessToken, getInfo } from '../../utils/auth';
+import { setIdToken, setAccessToken, setUserInfo } from '../../utils/auth';
+import { validateExistingUser } from '../../utils/devices-api';
+import Router from '../router';
 
 export default {
   name: 'callback',
@@ -10,7 +12,11 @@ export default {
     this.$nextTick(() => {
       setAccessToken();
       setIdToken();
-      window.location.href = '/devices';
+      setUserInfo()
+      .then((userData) => validateExistingUser(userData))
+      .then(() => {
+        Router.push('/devices');
+      });
     });
   },
 };
