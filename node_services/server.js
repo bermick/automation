@@ -26,21 +26,15 @@ const authCheck = jwt({
     algorithms: ['RS256']
 });
 
-app.get('/api/lights', authCheck, (req,res) => {
-  let privateLights = [
-    {
-      id: 2111,
-      name: 'Foco cocina',
-      estado: 1
-    },
-    {
-      id: 2112,
-      name: 'Luz Sala',
-      estado: 0
-    }
-  ];
-
-  res.json(privateLights);
+app.get('/api/lights', authCheck, (req, res) => {
+  console.log(req.query);
+  devices.getDevicesForUser(req.query.user)
+  .then((result) => {
+    res.json(result);
+  })
+  .catch((err) => {
+    res.status(500).send(err);
+  });
 });
 
 app.post('/api/register/device', authCheck, (req, res) => {

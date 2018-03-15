@@ -11,10 +11,10 @@
       <div class="col-sm-4" v-for="device in devices">
         <div class="panel panel-danger">
           <div class="panel-heading">
-            <h3 class="panel-title"> {{ device.name }} </h3>
+            <h3 class="panel-title"> {{ device.mac_address }} </h3>
           </div>
           <div class="panel-body">
-            <p><span class="badge alert-info"> Esado: </span> {{ device.estado }} </p>
+            <p><span class="badge alert-info"> Esado: </span> {{ device.state }} </p>
           </div>
         </div>
       </div>
@@ -84,14 +84,14 @@ export default {
     handleAdd() {
       this.$modal.show('devicesModal');
     },
-    getPrivateDevices() {
-      getPrivateDevices().then((devicesFromServer) => {
+    getPrivateDevices(userData) {
+      getPrivateDevices(userData).then((devicesFromServer) => {
         this.devices = devicesFromServer;
       });
     },
   },
   mounted() {
-    this.getPrivateDevices();
+    this.getPrivateDevices(getUserInfo());
   },
 };
 </script>
