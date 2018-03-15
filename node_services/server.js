@@ -7,6 +7,7 @@ const jwks = require('jwks-rsa');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const devices = require('./devices');
+const users = require('./users');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,6 +47,17 @@ app.post('/api/register/device', authCheck, (req, res) => {
   devices.getStagedDevice(req.body)
   .then((result) => {
     res.send(result);
+  })
+  .catch((err) => {
+    res.status(500).send(err);
+  });
+  
+});
+
+app.post('/api/register/user', authCheck, (req, res) => {
+  users.registerUser(req.body)
+  .then((registered) => {
+    res.send({success: registered});
   })
   .catch((err) => {
     res.status(500).send(err);

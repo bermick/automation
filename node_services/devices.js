@@ -9,10 +9,10 @@ async function getStagedDevice(device) {
 		let results = await db.executeGenericQuery('SELECT * FROM Staging_Devices where Staging_Devices.key = "' + device.key + '"');
 
 		if (results.length === 1) {
-			let registeredDevices = await db.executeGenericQuery('SELET mac_address FROM mac_keys WHERE mac_keys.key = "' + device.key + '"');
+			let registeredDevices = await db.executeGenericQuery('SELECT * FROM mac_keys WHERE mac_keys.key = "' + device.key + '"');
 			if(registeredDevices.length === 1) {
-				console.log(registeredDevices.mac_address);
-				let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code) VALUES(null,"' + registeredDevices.mac_address +'", "0", "' + device.user_id  + '", "' + device.key + '" )';
+				let userID = await db.executeGenericQuery('SELECT Users.id FROM Users WHERE Users.email = "' + device.email + '"');
+				let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code) VALUES(null,"' + registeredDevices[0].mac_address +'", "0", "' + userID[0].id  + '", "' + device.key + '" )';
 				let insertResult = await db.executeGenericQuery(insertQuery);
 				if (insertResult.affectedRows) {
 					return 'Device ' + device.key + ' added successfully';

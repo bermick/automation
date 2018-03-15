@@ -35,6 +35,7 @@ var closeConnection = function() {
 };
 
 var executeGenericQuery = function(query) {
+	console.log(query);
 	return new Promise(function(resolve, reject) {
 		connectionPool.getConnection(function(err, connection) {
 			connection.query(query, function (error, results, fields) {
