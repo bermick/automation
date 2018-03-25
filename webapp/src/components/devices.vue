@@ -11,10 +11,10 @@
       <div class="col-sm-4" v-for="device in devices">
         <div class="panel panel-danger">
           <div class="panel-heading">
-            <h3 class="panel-title"> {{ device.mac_address }} </h3>
+            <h3 class="panel-title"> {{ device.name }} </h3>
           </div>
           <div class="panel-body">
-            <p><span class="badge alert-info"> Esado: </span> {{ device.state }} </p>
+            <p><span class="badge alert-info"> Estado: </span> {{ device.state }} </p>
           </div>
         </div>
       </div>
@@ -28,14 +28,18 @@
         <h4 class="modal-title">Add Device</h4>
       </div>
       <div class="modal-body">
-        <p>Enter the device's ID</p>
+        <p>Enter device's ID</p>
         <input v-model="deviceID" placeholder="device id">
         <rotate-square2 v-if="isAdding"></rotate-square2>
+      </div>
+      <div class="modal-body">
+        <p>Enter device's name</p>
+        <input v-model="deviceName" placeholder="device name">
       </div>
       <div class="modal-footer">
         <div>{{ status }}</div>
         <button type="button" class="btn btn-default" @click="closeModal()">Close</button>
-        <button type="button" class="btn btn-primary" @click="validateDeviceID()">Validate</button>
+        <button type="button" class="btn btn-primary" @click="addDevice()">Add</button>
       </div>
     </modal>
   </div>
@@ -57,6 +61,7 @@ export default {
       isAdding: false,
       devices: '',
       deviceID: '',
+      deviceName: '',
       status: '',
     };
   },
@@ -67,25 +72,34 @@ export default {
     closeModal() {
       this.$modal.hide('devicesModal');
     },
-    validateDeviceID() {
-      this.isAdding = true;
-      this.status = 'Adding Device';
-      const deviceToInsert = {
-        key: this.deviceID,
-        email: getUserInfo().email,
-      };
-      validateDeviceID(deviceToInsert).then((response) => {
-        this.status = response;
-      })
-      .finally(() => {
-        this.isAdding = false;
-      });
+    addDevice() {
+      if (this.deviceID === '' || this.deviceName === '') {
+        this.status = 'Please provide device information';
+      } else {
+        this.isAdding = true;
+        this.status = 'Adding Device';
+        const deviceToInsert = {
+          key: this.deviceID,
+          name: this.deviceName,
+          email: getUserInfo().email,
+        };
+
+        validateDeviceID(deviceToInsert)
+        .then((response) => {
+          this.status = response;
+          this.getPrivateDevices(getUserInfo());
+        })
+        .finally(() => {
+          this.isAdding = false;
+        });
+      }
     },
     handleAdd() {
       this.$modal.show('devicesModal');
     },
     getPrivateDevices(userData) {
-      getPrivateDevices(userData).then((devicesFromServer) => {
+      getPrivateDevices(userData)
+      .then((devicesFromServer) => {
         this.devices = devicesFromServer;
       });
     },

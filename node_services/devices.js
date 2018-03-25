@@ -12,7 +12,7 @@ async function getStagedDevice(device) {
 			let registeredDevices = await db.executeGenericQuery('SELECT * FROM mac_keys WHERE mac_keys.key = "' + device.key + '"');
 			if(registeredDevices.length === 1) {
 				let userID = await db.executeGenericQuery('SELECT Users.id FROM Users WHERE Users.email = "' + device.email + '" LIMIT 1');
-				let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code) VALUES(null,"' + registeredDevices[0].mac_address +'", "0", "' + userID[0].id  + '", "' + device.key + '" )';
+				let insertQuery = 'INSERT INTO Devices (id,mac_address,state,user_id,code,name) VALUES(null,"' + registeredDevices[0].mac_address +'", "0", "' + userID[0].id  + '", "' + device.key + '", "' + device.name + '" )';
 				let insertResult = await db.executeGenericQuery(insertQuery);
 				if (insertResult.affectedRows) {
 					return 'Device ' + device.key + ' added successfully';
@@ -38,8 +38,9 @@ async function isDeviceStaged(key) {
 async function getUser(email) {
 	try	{
 		let userID = await db.executeGenericQuery('SELECT * FROM Users WHERE Users.email = "' + email + '" LIMIT 1');
-		if (userID.length === 1)
+		if (userID.length === 1) {
 			return userID[0];
+		}
 		else
 			throw 'Error with user: ' + email;
 	} catch(error) {

@@ -27,7 +27,6 @@ const authCheck = jwt({
 });
 
 app.get('/api/lights', authCheck, (req, res) => {
-  console.log(req.query);
   devices.getDevicesForUser(req.query.user)
   .then((result) => {
     res.json(result);

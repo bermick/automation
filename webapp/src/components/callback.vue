@@ -13,7 +13,7 @@ export default {
       setAccessToken();
       setIdToken();
       setUserInfo()
-      .then((userData) => validateExistingUser(userData))
+      .then(userData => validateExistingUser(userData))
       .then(() => {
         Router.push('/devices');
       });
