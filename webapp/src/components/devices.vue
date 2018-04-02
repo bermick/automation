@@ -39,7 +39,7 @@
       <div class="modal-footer">
         <div>{{ status }}</div>
         <button type="button" class="btn btn-default" @click="closeModal()">Close</button>
-        <button type="button" class="btn btn-primary" @click="addDevice()">Add</button>
+        <button type="button" class="btn btn-primary" @click="addDevice()" :disabled="isAdding == 1">Add</button>
       </div>
     </modal>
   </div>
