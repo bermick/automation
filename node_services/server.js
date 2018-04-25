@@ -58,5 +58,13 @@ app.post('/api/register/user', authCheck, (req, res) => {
   
 });
 
+// From device
+app.post('/api/register/staging-device', (req, res) => {
+  devices.registerStagingDevice(req.body)
+  .then((result) => {
+    res.send(result);
+  });
+});
+
 app.listen(3333);
 console.log('Listening on localhost:3333');
