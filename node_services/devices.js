@@ -54,6 +54,22 @@ async function getDevicesForUser(email) {
 	}
 }
 
+async function registerStagingDevice(data) {
+	let validMAC = await db.executeGenericQuery('SELECT * FROM mac_keys where mac_keys.mac_address = "' + data.mac + '"');
+	if (validMAC.length) {
+		let key = validMAC[0].key;
+		let insertQuery = 'INSERT IGNORE INTO Staging_Devices VALUES(null,"' + key + '", "' + data.type + '", CURDATE()' + ', "' + data.mac + '", NOW(),' + ' 1)';
+		
+		let insertResult = await db.executeGenericQuery(insertQuery);
+		if (insertResult.affectedRows) {
+			return 'Device ' + data.mac + ' staged successfully';
+		}
+	} else {
+		return "Invalid MAC. Mac doesn't exist on mac_keys table";
+	}
+}
+
 // EXPORTS
 exports.getStagedDevice = getStagedDevice;
 exports.getDevicesForUser = getDevicesForUser;
+exports.registerStagingDevice = registerStagingDevice;
